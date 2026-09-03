@@ -9,13 +9,13 @@ Tools to help with static &amp; dynamic analysis of bash scripts/programs.
 
 ### Dynamic analysis
 - Include a few lines in the target code to change runtime behavior.
--- Log function entry and exit.
--- Log changes to the environment at entry and exit.
--- Introduce a pause at the function exit to allow for additional inspection.
+  - Log function entry and exit.
+  - Log changes to the environment at entry and exit.
+  - Introduce a pause at the function exit to allow for additional inspection.
 - Create a stand-alone program that pull in select functions from the main code.
--- This allows for testing of functions in isolation with control over the environment.
--- Functions can be pulled in without change.
--- Or they can be pulled in with behavior changes (logging/pausing).
+  - This allows for testing of functions in isolation with control over the environment.
+  - Functions can be pulled in without change.
+  - Or they can be pulled in with behavior changes (logging/pausing).
 
 ## Function Format Expectations
 This code uses regular expressions, rather than a complete parser to extract 
