@@ -1,13 +1,37 @@
+#! /bin/bash
+# Copyright (c) Paul C. Casto
+# Released under MIT license
 
-# depending on the context, the config file may be seen as in the current directory or in the test-snippets directory.
-if [[ -f 'test-snippet.conf' ]]; then
-	source test-snippet.conf
-elif [[ -f 'test-snippets/test-snippet.conf' ]]; then
-	source test-snippets/test-snippet.conf
-else
-	echo "Error: test-snippet.conf not found in current directory or test-snippets directory." >&2
-	exit 1
-fi
+# Source this file in any code where pull-functions has been used to 'instrument' or 'inspect' functions.
+# Functions decorated with environment inspection require the variables and functions defined here
+
+# Set these in the environment if you want different behavior
+: "${INST_OUTPUT:='./inspect'}"
+: "${INST_ENV="$INST_OUTPUT/environment"}"
+: "${INST_LOG="$INST_OUTPUT/inspect.log"}"
+
+: "${INST_DIFF='diff'}"
+: "${INST_DIFF_OPTIONS='-N -C 1'}"
+
+mkdir -p $INST_OUTPUT
+touch $INST_ENV
+touch $INST_LOG
+export INST_ENV
+export INST_LOG
+
+# can set PULL_FUNC_ECHO=inst_echo_log
+# that will send to console and to log
+inst_echo_log ()
+{
+	echo $@ | tee $INST_LOG
+}
+
+# can set PULL_FUNC_ECHO=inst_log
+# that will send just to log
+inst_log ()
+{
+	echo $@ >> $INST_LOG
+}
 
 # Define a "method missing" hook
 # this does not accomplish the export -f or retry...
@@ -60,6 +84,6 @@ instrument_env () {
 }
 
 # maybe not needed, but just in case...
-#export -f instrument_env
-#export -f show_env
-#export -f command_not_found_handle
+export -f instrument_env
+export -f show_env
+export -f command_not_found_handle
